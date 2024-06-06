@@ -1,0 +1,4 @@
+shred
+*.swp
+coverage.out
+
