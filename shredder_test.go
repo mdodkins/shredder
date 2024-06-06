@@ -28,7 +28,7 @@ func (w *WriterThatErrorsOnWrite) Write(p []byte) (n int, err error) {
     return 0, errors.New("Some awful write error")
 }
 
-func TestPanicWhenWriterErrors(t *testing.T) {
+func TestWriterErrorsCausePanic(t *testing.T) {
     // Given
     var arbitraryLength int64 = 6
     writer := &WriterThatErrorsOnWrite{} 
@@ -57,7 +57,7 @@ func (w *WriterThatErrorsOnSync) Sync() error {
     return errors.New("Some awful sync error")
 }
 
-func TestPanicWhenWriterErrorsOnSync(t *testing.T) {
+func TestSyncErrorsCausePanic(t *testing.T) {
     // Given
     writer := &WriterThatErrorsOnSync{buf: &bytes.Buffer{}}
     var arbitraryLength int64 = 6
@@ -84,7 +84,7 @@ func (w *WriterThatDoesNotImplementSync) Seek(offset int64, whence int) (int64, 
     return 0, nil
 }
 
-func TestNoPanicWhenWriterDoesNotImplementSync(t *testing.T) {
+func TestWriterWithNoSyncDoesNotCausePanic(t *testing.T) {
     // Given
     writer := &WriterThatDoesNotImplementSync{buf: &bytes.Buffer{}}
     var arbitraryLength int64 = 6
@@ -110,7 +110,7 @@ func (w *WriterThatDoesNotImplementSeek) Write(p []byte) (n int, err error) {
     return w.buf.Write(p)
 }
 
-func TestPanicWhenWriterDoesNotImplementSeek(t *testing.T) {
+func TestWriterWithNoSeekCausesPanic(t *testing.T) {
     // Given
     writer := &WriterThatDoesNotImplementSeek{buf: &bytes.Buffer{}}
     var arbitraryLength int64 = 6
@@ -138,7 +138,7 @@ func (w *WriterThatErrorsOnSeek) Seek(offset int64, whence int) (int64, error) {
     return 0, errors.New("Some awful seek error")
 }
 
-func TestPanicsWhenErrorOnSeek(t *testing.T) {
+func TestSeekErrorsCausePanic(t *testing.T) {
     // Given
     writer := &WriterThatErrorsOnSeek{buf: &bytes.Buffer{}}
     var arbitraryLength int64 = 6
@@ -160,7 +160,7 @@ func (e RandReaderThatErrors) Read(p []byte) (n int, err error) {
     return 0, errors.New("Some awful read error")
 }
 
-func TestPanicWhenRandReadFails(t *testing.T) {
+func TestRandReadErrorsCausePanic(t *testing.T) {
     // Given
     var arbitraryLength int64 = 6
 
@@ -258,7 +258,7 @@ func TestOverwriteStreamThreeTimes(t *testing.T) {
     }
 }
 
-func TestPanicWhenFileDoesNotExist(t *testing.T) {
+func TestFileNotExistingCausesPanic(t *testing.T) {
     // Given
     // Then
     defer func() {
@@ -314,7 +314,7 @@ func (f *aferoFileThatErrorsOnStat) Stat() (os.FileInfo, error) {
     return nil, errors.New("Some awful stat error")
 }
 
-func TestGetFileLengthPanicsOnFailure(t *testing.T) {
+func TestGetFileLengthErrorsCausePanic(t *testing.T) {
     // Given
     aferoFile := &aferoFileThatErrorsOnStat{}
 
